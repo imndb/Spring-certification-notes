@@ -1,11 +1,11 @@
 
-*War packaging: 
+# War packaging: 
 
 @SpringBootApplicatn
 public class Application extends SpringBootServletInitializer {}
 
 
-*MockMVC:
+# MockMVC:
 
 @AutoConfigureMockMVC
 @SpringBootTest(webEnvironement=.Mock)
@@ -26,7 +26,7 @@ Slide testing:
 @DataJpaTest
 
 
-*AOP:
+# AOP:
 
 
 @AfterReturning: (returning = "reward") -> parameter name in the method is reward
@@ -40,7 +40,7 @@ Slide testing:
 SpEL:
 
 @ for spring beans
-# expression
+- expression
 
 - using the default JDK dynamic proxies in Spring AOP, Only public interface method calls can be intercepted
 
@@ -53,8 +53,7 @@ Boot Autoconfig:
 - For DataSource to be autoconfigured and a bean to be created successfully, database connector and spring-boot-starter-data-jdbc  must included as a dependency.
 
 
-*JDBC:
-
+# JDBC:
 
 - Datasource represents any datasource for SQL database
 - The DataSource interface is implemented b a driver vendor.
@@ -79,7 +78,7 @@ Which of the following properties are required in order to configure an external
 - update method in jdbc template for update and insert operations.
 
 
-Transactions:
+# Transactions:
 
 
 - @Transactional > (rollBackFor=, noRollbackFor=)
@@ -92,7 +91,7 @@ Transactions:
 - attribute “readOnly” on the @Transactional may optimize query performance
 - Phantom reads can occur in all database system isolation levels except for SERIALIZABLE
 
-*Error Handling: 
+# Error Handling: 
 
 Spring Boot provide regarding error handling?
 
@@ -100,7 +99,7 @@ Spring Boot provide regarding error handling?
 2- JSON error response
 
 
-*Testing:
+# Testing:
 
 - ExtendWith is an annotation from JUnit 5.
 
@@ -142,7 +141,7 @@ NONE — Loads an ApplicationContext without providing any web environment.
 - JsonPath — A Java DSL for reading JSON documents.
 
 
-*Spring Data: 
+# Spring Data: 
 
 - correct naming convention for custom find methods in Spring Data Repository Interface: find(First[count]) By[Property Expression] [comparison operator] [ordering operator]
 
@@ -162,7 +161,7 @@ spring.jpa.properties.hibernate.format_sql=true
 sprng.jpa.hibernate.ddl-auto=none
 
 
-*Beans:
+# Beans:
 
 - Controllers implemented using annotations do not have direct dependencies on Portlet or Servlet APIs.
 - if you define both the “id” and “name” attributes in a bean’s XML definition:
@@ -215,7 +214,7 @@ valid ways of adding a Bean definition to the IoC Container:
 - Weaving: linking aspects with other application types or objects to create an advised object. This can be done at compile time (using the AspectJ compiler, for example), load time, or at runtime
 
 
-*Actuator:
+# Actuator:
 
 @GetMapping("/orders")
 @Timed("orders.summary")
@@ -240,7 +239,7 @@ features: 1-Monitoring 2. Metrics 3. Management
 - loggers endpoint to list all loggers or change the level of a logger.
 
 
-*Spring Security:
+# Spring Security:
 
 - enable @Secured annotation: @EnableGlobalMethodSecurity(securedEnabled = true)
 
@@ -253,7 +252,7 @@ features: 1-Monitoring 2. Metrics 3. Management
 - @EnableSpringSecurity Should be used on a @Configuration class to enable spring security. 
 
 
-*Rest:
+# Rest:
 
 - @ResponseStatus(HttpStatus.NOT_FOUND)
 - @ExceptionHandler({Exception.class, ...}) 
@@ -286,7 +285,7 @@ You can take control of Spring HATEOAS’ configuration by using @EnableHypermed
 The following bean scopes are only valid in the context of a web-aware Spring ApplicationContext: session, request, application
 
 
-*Container:
+# Container:
 
 @Bean
 @ConditionalOnBean(DataSource.class)
