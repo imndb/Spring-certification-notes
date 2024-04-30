@@ -7,6 +7,10 @@ public class Application extends SpringBootServletInitializer {}
 
 # MVC:
 
+- Classes annotation with @Controller are autodetected through classpath scanning.
+- @Controller is a specialization of @Component
+
+
 @AutoConfigureMockMVC
 @SpringBootTest(webEnvironement=.Mock)
 
@@ -30,6 +34,13 @@ Slide testing:
 
 
 # AOP:
+
+
+- Because JDK Dynamic Proxy requires the proxied object to implement an interface and only interface methods are proxied. Overriding in Java doesnt allow narrowing the visibility of a method and methods in interface are public. 
+
+- JDK Proxy and CGLIB proxy both doest support self invocation.
+
+- To enable self invocation support you need to configure spring aspects with aspectJ. This could be done by having dependency to spring-spects including aspectj-maven-plugin and configure transaction support with @EnableTransactionManagement(mode = AdviceMode.ASPECTJ)
 
 
 @AfterReturning: (returning = "reward") -> parameter name in the method is reward
@@ -137,6 +148,11 @@ Spring Boot provide regarding error handling?
 # Testing:
 
 - ExtendWith is an annotation from JUnit 5.
+
+- @SpringBootTest annotation is an alternative for @ContextConfiguration and creates ApplicationContext through SpringApplication, enables tests auto-configuration and spring boot test features.
+
+- Test Methods in classes, annotated with @DataJpaTest are transactional by default.
+- @ContextConfiguration without attributes will search for a file named testClassName-context.xml in the same class location.
 
 @Mock and @MockBean: 
 
@@ -249,6 +265,10 @@ valid ways of adding a Bean definition to the IoC Container:
 
 # Actuator:
 
+- UP and UNKNOWN are mapped to HTTP 200
+- DOWN and OUT_OF_SERVICE are mapped to HTTP 503s
+
+
 @GetMapping("/orders")
 @Timed("orders.summary")
 
@@ -275,6 +295,12 @@ features: 1-Monitoring 2. Metrics 3. Management
 
 
 # Spring Security:
+
+- Both @RolesAllowed annd @Secured can be used to specify list of rules that the currently authenticated user needs to have assigned, in order to be allowed to execute the guarded method. 
+
+- mvcMatcher is considered less secure than mvcMatcher.
+- mvcMatchers uses a bean of HandlerMappingIntrospector type to match the path and extract variables. This bean is an MVC infrastructure bean that is created when the application boots up and populated with information about all the handler methods declared within the application. This means that Spring MVC and Spring Security must share the application context, because HandlerMappiingIntrospector is created and registred by the Spring MVC configuration. antMatchers doesnt have that feature.
+
 
 - enable @Secured annotation: @EnableGlobalMethodSecurity(securedEnabled = true)
 
