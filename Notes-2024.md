@@ -5,7 +5,7 @@
 public class Application extends SpringBootServletInitializer {}
 
 
-# MockMVC:
+# MVC:
 
 @AutoConfigureMockMVC
 @SpringBootTest(webEnvironement=.Mock)
@@ -24,6 +24,9 @@ Slide testing:
 @WebMvcTest only for web layer. In this case use @MockBean to mock service layer. 
 
 @DataJpaTest
+
+
+- Erros, ServletRequest, ServletResopnse can be used as an argument for a method that is mapped to a request in a Controller class and Spring will auto-fill them with instances. 
 
 
 # AOP:
@@ -48,9 +51,40 @@ SpEL:
 -  @target limits matching to join points (the execution of methods when using Spring AOP) where the class of the executing object has an annotation of the given type. While @args limits matching to join points (the execution of methods when using Spring AOP)”
 
 
-Boot Autoconfig:
+Join Point Argument: 
+
+muss be the first parameter of an advice, 
+
+it can be used to retrieve the arguments of the join point(method arguments). 
+
+We can have only one JoinPint argument. 
+
+It is not supported with Around advice. Around supports ProceedingJoinPoint. 
+
+
+
+- Join Point is a point during the execution of a program, such as the execution of a method or the handling of an exception. In Spring AOP, a join point always represents a method execution. 
+
+
+- PointCut is a predicate that matches join points. Advice is associated with a pointcut expression and runs at any join point matched by the pointcut. 
+
+
+CGLIB proxy: cannot intercept private or final methods. Self-invation is not supported. Subclass is generated for each proxied object. 
+
+
+- Spring AOP proxies are created using JDK Dynamic proxy by default.
+- On top of auto configuration classes @Conditional or @Configuration is used.
+
+# Spring Boot:
 
 - For DataSource to be autoconfigured and a bean to be created successfully, database connector and spring-boot-starter-data-jdbc  must included as a dependency.
+- Spring Boot will first look for profile specific properties before application specific properties. 
+
+- Logback default logging system used by Spring Boot
+
+# Spring Test:
+
+- spring-boot-starter-test bringes junit 4, junit 5, spring test, assertJ, Mockito, Hamcrest, JSONassert to the classpath.
 
 
 # JDBC:
@@ -58,6 +92,7 @@ Boot Autoconfig:
 - Datasource represents any datasource for SQL database
 - The DataSource interface is implemented b a driver vendor.
 
+- If JDBC is used with transaction, then DataSourceUtils which is using TransactionSynchronizationManager will reuse connection between method calls as long as transaction is not commited or rolled back. 
 
 Which of the following properties are required in order to configure an external MySQL Database?
 
@@ -143,6 +178,8 @@ NONE — Loads an ApplicationContext without providing any web environment.
 
 # Spring Data: 
 
+- Spring Data uses JDK Dynamic proxy to intercept all calls to repositories and not CGLIB proxy. 
+
 - correct naming convention for custom find methods in Spring Data Repository Interface: find(First[count]) By[Property Expression] [comparison operator] [ordering operator]
 
 - If not specified @EnableJpaRepositories, will scan the package of the configuration class, but not subclasses. 
@@ -159,7 +196,6 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 
 sprng.jpa.hibernate.ddl-auto=none
-
 
 # Beans:
 
@@ -180,7 +216,6 @@ valid ways of adding a Bean definition to the IoC Container:
 3. @Bean annotated method in a @Configuration class
 
 4. Java Class annotated with @Component
-
 
 - In order to define a bean, one can create a class annotated with @Configuration and add a method annotated with @Bean to it.
 
@@ -210,15 +245,15 @@ valid ways of adding a Bean definition to the IoC Container:
 @ConditionalOnRepositoryType — Specified type of Spring Data repository has been enabled.
 @ConditionalOnSingleCandidate — Spring bean of specified type (class) contained in bean factory and single candidate can be determined.
 
-
 - Weaving: linking aspects with other application types or objects to create an advised object. This can be done at compile time (using the AspectJ compiler, for example), load time, or at runtime
-
 
 # Actuator:
 
 @GetMapping("/orders")
 @Timed("orders.summary")
 
+- Prometheus and logfile are endpoints available for web applications.
+- The statuses provided out of the box are UP, DOWN, UNKNOWN, OUT_OF_SERVICE
 
 public RegardController(MeterRegistry meter) 
 
@@ -251,12 +286,13 @@ features: 1-Monitoring 2. Metrics 3. Management
 - @Secured can be used on class level
 - @EnableSpringSecurity Should be used on a @Configuration class to enable spring security. 
 
+- DelegatingFilterProxy is a class that acts as a proxy for a standard Servlet Filter, delegating to a spring-managed bean that implements the Filter interface
+- FilterChainProxy is a class that delegates Filter requests to a list of spring-managed filter beans. 
 
 # Rest:
 
 - @ResponseStatus(HttpStatus.NOT_FOUND)
 - @ExceptionHandler({Exception.class, ...}) 
-
 
 - PUT, GET, DELETE are idempotent. 
 
@@ -280,6 +316,8 @@ The ObjectMapper is customized by setting the various spring.jackson.* propertie
 
 You can take control of Spring HATEOAS’ configuration by using @EnableHypermediaSupport. Note that doing so disables the ObjectMapper customization described earlier.
 
+- @RequestMapping without method will accept all the methods.
+- We can use @ResponseStatus annotation on top of a class to specify the response code for all the methos in the class.
 
 
 The following bean scopes are only valid in the context of a web-aware Spring ApplicationContext: session, request, application
@@ -327,5 +365,41 @@ private Percentage allocationPercentage;
  can be static
  cannot be private
 
+- Class with @Configuration: cannot be final
 
-- Class with @Configuration: cannot be final 
+- - A Bean has single scope by default.
+- @Scope("prototype") or @scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+- Classes marked with the @Configuration annotation are a bean themselves. 
+- Auto Configuration class is a class annotated with @Configuration
+- @ContextConfiguration is the annotation to declare application context in an integration test.
+- @ComponentScan without arguments tells Spring to scan the current package and all of its sub-packages.
+- JDK Dynamic proxy does not support self-invocation
+- JDK Dynamic Prox does does work with final classes.
+- JDK Dynamic proxy requires the proxied object to implement an interface and only interface methods are proxied. 
+
+- implementations of ApplicationContext Interface: AnnotationConfigAppliationContext, AnnotationConfigWebApplicationContext.
+
+
+@ExtendsWith(SpringExtension.class)
+
+@ContextConfiguration(classes= {SystemTestConfig.class})
+
+
+@SpringJUnitConfig composes: @ExtendsWith and @ContextConfiguration
+
+
+- Method annotated with @PostConstruct is called after dependency injection is done. 
+
+
+
+- Spring calls methods annotated with @PreDestroy and PostConstruct only once.
+
+- Methods annotated with @PreDestroy are called before the destroy() method of the interface DisposableBean.  
+
+
+- If bean scope is prototype, then it is note completely managed by spring container and @PreDestroy and @PostConstruct methods won’t get called. 
+
+
+- Spring calls methods annotated with @PostConstruct only once, just after initialization of bean properties. Methods annotated with @PostConstruct are called before afterPropertiesSet() method of the interface InitialiyingBean. The method annotated with @PostConstruct can have any access level but it can”t be static. 
+
+
