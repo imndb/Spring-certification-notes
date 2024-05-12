@@ -1,0 +1,252 @@
+* AOP:
+
+
+Pointcut: Describes a set of join points. It defines where the advice specified in an aspect should be applied.
+Advice: Describes the action to be taken at a particular join point. It is the additional behavior that you want to apply.
+Aspect: A module that encapsulates cross-cutting concerns, such as logging or security, and is made up of pointcuts, advice, and inter-type declarations.
+- Weaving is linking aspects with other application types or objects to create an advised object.
+
+- @ in SPEL: bean or bean properties
+
+
+Join Point Argument: 
+
+muss be the first parameter of an advice, 
+
+it can be used to retrieve the arguments of the join point(method arguments). 
+
+We can have only one JoinPint argument. 
+
+It is not supported with Around advice. Around supports ProceedingJoinPoint. 
+
+
+
+
+
+* Transactions:
+
+
+
+common exceptions that will cause a transaction rollback by default:
+
+RuntimeException and its subclasses
+Error and its subclasses
+DataAccessException and its subclasses, such as DuplicateKeyException, CannotAcquireLockException, etc. (These exceptions are typically thrown by Spring's data access frameworks like JDBC, Hibernate, JPA, etc.)
+TransientDataAccessResourceException (A special exception that indicates a transient failure to access a resource, such as a database connection timeout or a network failure)
+TransactionSystemException (Thrown when a transaction cannot be started, committed, or rolled back due to an underlying system error)
+
+
+* REST:
+
+- Multiple paths can be specified in the @RequestMapping.
+
+
+* TEST:
+
+- Execution of sql scripts on running tests: addScripts method of the ResourceDatabasePopulator class. @Sql annotation.
+
+@Sql(scripts = "schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+
+
+ResourceDatabasePopulator rdp = new ResourceDatabasePopulator();
+rdp.addScript(new ClassPathResource("sql/create-tables.sql"));
+rdp.execute(dataSource);
+
+
+- How Spring boot locate application.properties file:
+
+
+/config sub-directory of the working directory
+
+working directory
+
+config package in the classpath
+
+classpath root
+
+
+Spring HATEOAS auto-configuration provide:
+
+Replaces the need for @EnableHypermediaSupport
+Registers beans for building hypermedia-based applications
+Includes LinkDiscoverers for client-side support
+Provides a customized ObjectMapper for response marshaling.
+
+
+- Set the server.port=0 property in the application.properties file of the test resources MVC test can be executed on a random port in spring. 
+
+
+* Actuator: 
+
+ - we can change the default mapping of Health Indicator Statuses.
+
+
+The following HealthIndicators are auto-configured by Spring Boot when appropriate:
+
+NameDescription
+
+CassandraHealthIndicator    Checks that a Cassandra database is up.
+
+DiskSpaceHealthIndicator     Checks for low disk space.
+
+DataSourceHealthIndicator    Checks that a connection to DataSource can be obtained.
+
+ElasticsearchHealthIndicator     Checks that an Elasticsearch cluster is up.
+
+JmsHealthIndicator    Checks that a JMS broker is up.
+
+MailHealthIndicator    Checks that a mail server is up.
+
+MongoHealthIndicator    Checks that a Mongo database is up.
+
+RabbitHealthIndicator    Checks that a Rabbit server is up.
+
+RedisHealthIndicator    Checks that a Redis server is up.
+
+SolrHealthIndicator    Checks that a Solr server is up.
+
+
+-  If you put the @Autowired annotation on a final field in Spring, it will result in an error. Spring's autowiring mechanism is not designed to inject dependencies into final fields. By default, Spring uses reflection to set the value of autowired fields, and final fields cannot be modified once they are assigned a value.
+
+
+* Bean:
+
+
+
+- DispatcherServlet uses components of type HandlerAdapter and HandlerMapping
+
+
+
+* Security:
+
+
+Authentication mechanisms in Spring Boot:
+
+
+
+Authentication Mechanisms
+
+Username and Password - how to authenticate with a username/password
+OAuth 2.0 Login - OAuth 2.0 Log In with OpenID Connect and non-standard OAuth 2.0 Login (i.e. GitHub)
+SAML 2.0 Login - SAML 2.0 Log In
+Central Authentication Server (CAS) - Central Authentication Server (CAS) Support
+Remember Me - how to remember a user past session expiration
+JAAS Authentication - authenticate with JAAS
+Pre-Authentication Scenarios - authenticate with an external mechanism such as SiteMinder or Java EE security but still use Spring Security for authorization and protection against common exploits.
+X509 Authentication - X509 Authentication
+
+
+======================
+
+* Servlett:
+
+
+
+- ContentNegotiatingViewResolver does not resolve views itself but rather delegates to other view resolvers and selects the view that resembles the representation requested by the client.
+
+
+
+
+
+InternalResourceViewResolver
+Convenient subclass of UrlBasedViewResolver that supports InternalResourceView (in effect, Servlets and JSPs) and subclasses such as JstlView. You can specify the view class for all views generated by this resolver by using setViewClass(..). See the UrlBasedViewResolver javadoc for details.
+FreeMarkerViewResolver
+Convenient subclass of UrlBasedViewResolver that supports FreeMarkerView and custom subclasses of them.
+ContentNegotiatingViewResolver
+Implementation of the ViewResolver interface that resolves a view based on the request file name or Accept header. See Content Negotiation.
+BeanNameViewResolver
+Implementation of the ViewResolver interface that interprets a view name as a bean name in the current application context. This is a very flexible variant which allows for mixing and matching different view types based on distinct view names. Each such View can be defined as a bean e.g. in XML or in configuration classes.
+
+-  BeanFactoryPostProcessor interface has a method named postProcessBeanFactory()
+
+
+
+- Order destroy methods: 
+
+Methods annotated with @PreDestroy
+
+destroy() as defined by the DisposableBean callback interface
+
+A custom configured destroy() method
+
+
+
+
+
+* MVC:
+
+
+- Erros, ServletRequest, ServletResopnse can be used as an argument for a method that is mapped to a request in a Controller class and Spring will auto-fill them with instances. 
+
+
+- ViewResolver: 
+
+
+
+Spring framework provides several ViewResolver implementations, such as InternalResourceViewResolver, BeanNameViewResolver, and ContentNegotiatingViewResolver. However, you need to register at least one ViewResolver bean in your web configuration, otherwise, the DispatcherServlet will not be able to resolve the view names returned by the controllers.
+
+
+
+- An application can have multiple implementations of ViewResolver, and their priority can be controlled.
+
+
+
+- They can map a String (the logical name of the view) to a View.
+
+
+
+- are default configurations for Spring Boot logging: Logback and Log4J2
+
+
+
+- template engine is  supported by Spring as a default option:
+
+
+
+- @MockBean is a @Repeatable annotation. 
+
+
+
+* JDBC:
+
+
+
+- kinds of objects that can be retrieved from a query using JdbcTemplate: Literal, properties, User Defined Types
+
+
+* Container:
+
+
+
+- SpringBootApplication -> Configuration, ComponentScan, EnableAutoConfiguration
+
+
+@ExtendsWith(SpringExtension.class)
+
+@ContextConfiguration(classes= {SystemTestConfig.class})
+
+
+
+@SpringJUnitConfig composes: @ExtendsWith and @ContextConfiguration
+
+
+
+
+
+- Method annotated with @PostConstruct is called after dependency injection is done. 
+
+
+- Spring calls methods annotated with @PreDestroy and PostConstruct only once.
+
+- Methods annotated with @PreDestroy are called before the destroy() method of the interface DisposableBean.  
+
+
+
+- If bean scope is prototype, then it is note completely managed by spring container and @PreDestroy and @PostConstruct methods won’t get called. 
+
+
+
+- Spring calls methods annotated with @PostConstruct only once, just after initialization of bean properties. Methods annotated with @PostConstruct are called before afterPropertiesSet() method of the interface InitialiyingBean. The method annotated with @PostConstruct can have any access level but it can”t be static. 
+
+
